@@ -9,16 +9,27 @@ public class TestP2
 
         var turned = 0;
         var passing = new int[weight.Length];
-        passing[0] = weight[0];
-        int i = 0, j = 1;
+        int i = 0, j = 0;
+
+        while (j < weight.Length && weight[j] >= U)
+        {
+            turned += 1;
+            j += 1;
+        }
+
+        if (j < weight.Length - 1)
+        {
+            passing[0] = weight[j];
+            j += 1;
+        }
 
         while (j < weight.Length - 1)
         {
             if (passing[i] + weight[j] <= U)
             {
                 i += 1;
-                j += 1;
                 passing[i] = weight[j];
+                j += 1;
                 continue;
             }
 
@@ -34,7 +45,8 @@ public class TestP2
             }
         }
 
-        if (passing[i] + weight[j] > U) turned += 1;
+        if (j < weight.Length && passing[i] + weight[j] > U) turned += 1;
+
         return turned;
     }
 }
