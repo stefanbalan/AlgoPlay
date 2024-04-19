@@ -35,15 +35,53 @@ public class P044WildcardMatching
 {
     public bool IsMatch(string s, string p)
     {
-        return IsMatch(s, s.Length-1, p, p.Length-1);
+        if (string.IsNullOrWhiteSpace(s))
+            return string.IsNullOrWhiteSpace(p.Replace("*", ""));
+
+        if (string.IsNullOrWhiteSpace(p)) return false;
+        while (p.IndexOf("**", StringComparison.Ordinal) > -1)
+            p = p.Replace("**", "*");
+
+        var isMatch = new bool[p.Length + 1, s.Length + 1];
+        isMatch[0, 0] = true;
+        var stars = 0;
+        for (int pi = 1; pi <= p.Length; pi++)
+        {
+            if (p[pi - 1] == '*')
+            {
+                stars += 1;
+                if (stars == 1)
+                    for (int si = pi - stars; si <= s.Length; si++)
+                        isMatch[pi, si] = true;
+                else
+                    for (int si = pi - stars; si <= s.Length; si++)
+                        isMatch[pi, si] = isMatch[pi - 1, si] || isMatch[pi, si - 1];
+            }
+            else
+            {
+                var anyMatch = false;
+                for (int si = pi - stars; si <= s.Length; si++)
+                {
+                    isMatch[pi, si] = (p[pi - 1] == s[si - 1] || p[pi - 1] == '?')
+                                      && isMatch[pi - 1, si - 1];
+                    anyMatch |= isMatch[pi, si];
+                }
+
+                if (!anyMatch) return false;
+            }
+        }
+
+        return isMatch[p.Length, s.Length];
     }
 
+
+    // recursive 
     public bool IsMatch(string s, int si, string p, int pi)
     {
         if (p[pi] == s[si] || p[pi] == '?')
         {
             if (si == 0 && pi == 0) return true;
-            if (si == 0 || pi == 0) return false;
+            if (si == 0 || pi == 0) return (pi == 1 && p[0] == '*');
             return IsMatch(s, si - 1, p, pi - 1);
         }
 
