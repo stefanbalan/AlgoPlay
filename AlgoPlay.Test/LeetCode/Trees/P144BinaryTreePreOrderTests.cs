@@ -9,11 +9,21 @@ public class P144BinaryTreePreOrderTests
 
     [Theory]
     [MemberData(nameof(MemberData))]
-    public void PreorderTraversalTest1(int?[] input, int[] output)
+    public void PreorderTraversalTest(int?[] input, int[] output)
     {
         var root = TreeNode.FromArray(input);
         var p144 = new P144BinaryTreePreOrder();
         var result = p144.PreorderTraversal(root);
+        Assert.Equal(output, result);
+    }
+
+    [Theory]
+    [MemberData(nameof(MemberData))]
+    public void PreorderTraversalTest1(int?[] input, int[] output)
+    {
+        var root = TreeNode.FromArray(input);
+        var p144 = new P144BinaryTreePreOrder();
+        var result = p144.PreorderTraversal1(root);
         Assert.Equal(output, result);
     }
 

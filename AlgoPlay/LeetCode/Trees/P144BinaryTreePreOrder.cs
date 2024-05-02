@@ -56,6 +56,27 @@ public class P144BinaryTreePreOrder
         return result;
     }
 
+    public IList<int> PreorderTraversal1(TreeNode? root) // all stack!
+    {
+        //var maxStackSize = 0;
+        var result = new List<int>(100);
+        if (root == null) return result;
+
+        TreeNode current;
+        var stack = new Stack<TreeNode>(100);
+        stack.Push(root);
+        while (stack.Count > 0)
+        {
+            current = stack.Pop();
+            result.Add(current.val);
+            if(current.right != null) stack.Push(current.right);
+            if(current.left != null) stack.Push(current.left);
+            //maxStackSize = Math.Max(maxStackSize, stack.Count);
+        }
+
+        return result;
+    }
+    
     public IList<int> PreorderTraversal2(TreeNode? root) // I thought this would be faster but it's not
     {
         //var maxStackSize = 0;
